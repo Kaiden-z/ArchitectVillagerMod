@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 public class ArchitectVillagerMod
 {
     // Define mod id in a common place for everything to reference
-    public static final String MODID = "architect-villager-mod";
+    public static final String MODID = "architectvillagermod";
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
 
