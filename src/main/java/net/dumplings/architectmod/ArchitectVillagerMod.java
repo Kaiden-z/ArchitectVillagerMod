@@ -1,6 +1,7 @@
 package net.dumplings.architectmod;
 
 import com.mojang.logging.LogUtils;
+import net.dumplings.architectmod.block.ModBlocks;
 import net.dumplings.architectmod.item.ModItems;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -29,6 +30,8 @@ public class ArchitectVillagerMod
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModItems.register(modEventBus);
+        ModBlocks.register(modEventBus);
+
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
@@ -51,6 +54,10 @@ public class ArchitectVillagerMod
         if (event.getTabKey() == CreativeModeTabs.INGREDIENTS)
         {
             event.accept(ModItems.BLUEPRINT);
+        }
+        if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS)
+        {
+            event.accept(ModBlocks.SAWMILL_BLOCK);
         }
     }
 
