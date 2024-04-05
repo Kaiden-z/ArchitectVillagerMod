@@ -3,6 +3,7 @@ package net.dumplings.architectmod;
 import com.mojang.logging.LogUtils;
 import net.dumplings.architectmod.block.ModBlocks;
 import net.dumplings.architectmod.item.ModItems;
+import net.dumplings.architectmod.villager.ModVillagers;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
@@ -31,6 +32,7 @@ public class ArchitectVillagerMod
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
+        ModVillagers.register(modEventBus);
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);

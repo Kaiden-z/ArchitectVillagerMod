@@ -1,3 +1,8 @@
 {
-  "item.architectvillagermod.blueprint": "Blueprint"
+  "item.architectvillagermod.blueprint": "Blueprint",
+
+  "block.architectvillagermod.sawmill_block": "Blueprint Table",
+
+  "entity.minecraft.villager.architectvillagermod.architect": "Architect"
+
 }
