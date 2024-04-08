@@ -1,23 +1,39 @@
 package net.dumplings.architectmod.item.custom;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.*;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Optional;
 
 abstract class BlueprintItemBase extends Item {
 
     protected VillagerProfession professionType; // Type of villager that this blueprint should spawn
     protected BlockPos structureSize; // Size of structure in terms of a 3d Vector (length, height, width)
+    protected String structureFileName; // Name of the nbt file that holes the structure
     private BlockPos validSiteCorner = null; // BlockPos of structure corner when site considered valid at the time of checking
     private Direction validDirection = null; // Direction of player when site was considered valid at the time of checking
     public BlueprintItemBase(Properties pProperties) {
@@ -43,7 +59,7 @@ abstract class BlueprintItemBase extends Item {
 
                 } else if (positionClicked.equals(validSiteCorner)) {
                     player.sendSystemMessage(Component.literal("Building structure...").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GREEN));
-
+                    structureGen(validSiteCorner, pContext, structureFileName);
                     validSiteCorner = null;
                     validDirection = null;
                     return InteractionResult.SUCCESS;
@@ -105,7 +121,98 @@ abstract class BlueprintItemBase extends Item {
                 return false;
             }
         }
-
         return true;
+    }
+
+    /**
+     * Grabbing and storing the block position and palette from the nbt file
+     *
+     * @param structureName the nbt file name of the given structure
+     * @param level The bottom left corner of the where the structure is to be built
+     * @return a list of buildingBlocks
+     */
+    public static ArrayList<buildingBlocks> getBuildingBlocks(String structureName, LevelAccessor level) {
+        ResourceManager resourceManager;
+        if (!level.isClientSide())
+            resourceManager = Minecraft.getInstance().getResourceManager();
+        else
+            resourceManager = Objects.requireNonNull(level.getServer()).getResourceManager();
+
+        ArrayList<buildingBlocks> blocks = new ArrayList<>();
+
+        CompoundTag nbt = getBuildingNbt(structureName, resourceManager);
+        assert nbt != null;
+        ListTag blocksNbt = nbt.getList("blocks", 10);
+        ArrayList<BlockState> palette = getBuildingPalette(nbt);
+
+        for(int i = 0; i < blocksNbt.size(); i++) {
+            CompoundTag blockNbt = blocksNbt.getCompound(i);
+            ListTag blockPosNbt = blockNbt.getList("pos", 3);
+            blocks.add(new buildingBlocks(
+                new BlockPos(
+                    blockPosNbt.getInt(0),
+                    blockPosNbt.getInt(1),
+                    blockPosNbt.getInt(2)
+                ),
+                    palette.get(blockNbt.getInt("state"))
+            ));
+        }
+        return blocks;
+    }
+
+    /**
+     * Assessing the nbt file from resources folder
+     *
+     * @param structureName the nbt file name of the given structure
+     * @param resManager ResourceManager
+     * @return all structure info in CompoundTag
+     */
+    public static CompoundTag getBuildingNbt(String structureName, ResourceManager resManager) {
+        try {
+            ResourceLocation rl = new ResourceLocation(
+                    "architectvillagermod",
+                    "structures/" + structureName + ".nbt"
+            );
+            Optional<Resource> rs = resManager.getResource(rl);
+            return NbtIo.readCompressed(rs.get().open(), NbtAccounter.unlimitedHeap());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Parse through all the available block palettes given a structure
+     *
+     * @param nbt CompoundTags; various info of a given structure
+     * @param resManager ResourceManager
+     * @return list of various block palettes
+     */
+    public static ArrayList<BlockState> getBuildingPalette(CompoundTag nbt) {
+        ArrayList<BlockState> palette = new ArrayList<>();
+        // load in palette (list of unique block states)
+        ListTag paletteNbt = nbt.getList("palette", 10);
+        for (int i = 0; i < paletteNbt.size(); i++)
+            palette.add(NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), paletteNbt.getCompound(i)));
+        return palette;
+    }
+    
+    /**
+     * Generate the structure
+     *
+     * @param sitePos the placed location of the block
+     * @param pContext UseOnContext
+     * @param structureName nbt file name of the structure
+     * @return list of various block palettes
+     */
+    public static void structureGen(BlockPos sitePos, UseOnContext pContext, String structureName) {
+        ArrayList<buildingBlocks> blocksList = getBuildingBlocks(structureName, pContext.getLevel());
+        for (buildingBlocks block : blocksList) {
+            BlockPos relativeToWorld = new BlockPos (
+                    sitePos.getX() + block.blockPosition().getX(),
+                    sitePos.getY() +  block.blockPosition().getY() + 1,
+                    sitePos.getZ() +  block.blockPosition().getZ()
+            );
+            pContext.getLevel().setBlockAndUpdate(relativeToWorld, block.blockState());
+        }
     }
 }

@@ -8,5 +8,6 @@ public class CartographerHouseBlueprintItem extends BlueprintItemBase {
         super(pProperties);
         professionType = VillagerProfession.CARTOGRAPHER;
         structureSize = new BlockPos(5, 5, 5);
+        structureFileName = "testing";
     }
 }
