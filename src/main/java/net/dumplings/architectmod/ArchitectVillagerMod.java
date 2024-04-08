@@ -53,9 +53,11 @@ public class ArchitectVillagerMod
     // Add the example block item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event)
     {
-        if (event.getTabKey() == CreativeModeTabs.INGREDIENTS)
+        if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES)
         {
-            event.accept(ModItems.BLUEPRINT);
+            event.accept(ModItems.ARMORER_HOUSE_BLUEPRINT);
+            event.accept(ModItems.BUTCHER_HOUSE_BLUEPRINT);
+            event.accept(ModItems.CARTOGRAPHER_HOUSE_BLUEPRINT);
         }
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS)
         {

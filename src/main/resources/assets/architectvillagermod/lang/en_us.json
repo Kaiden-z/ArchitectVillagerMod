@@ -1,5 +1,7 @@
 {
-  "item.architectvillagermod.blueprint": "Blueprint",
+  "item.architectvillagermod.armorer_house_blueprint": "Armorer House Blueprint",
+  "item.architectvillagermod.butcher_house_blueprint": "Butcher House Blueprint",
+  "item.architectvillagermod.cartographer_house_blueprint": "Cartographer House Blueprint",
 
   "block.architectvillagermod.sawmill_block": "Blueprint Table",
 

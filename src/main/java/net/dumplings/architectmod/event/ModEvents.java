@@ -28,7 +28,7 @@ public class ModEvents {
             // Level 1 trades
             trades.get(1).add((pTrader, pRandom) -> new MerchantOffer(
                     new ItemStack(Items.OAK_LOG, 10),
-                    new ItemStack(ModItems.BLUEPRINT.get(), 1),
+                    new ItemStack(ModItems.ARMORER_HOUSE_BLUEPRINT.get(), 1),
                     5, 8, 0.02f
             ));
         }
