@@ -51,7 +51,7 @@ abstract class BlueprintItemBase extends Item {
                 } else {
                     validSiteCorner = null;
                     validDirection = null;
-                    player.sendSystemMessage(Component.literal("Right clicked a different block. Construction cancelled.").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+                    player.sendSystemMessage(Component.literal("Clicked a different block. Construction cancelled.").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
                     return InteractionResult.SUCCESS;
                 }
 
