@@ -19,6 +19,6 @@ public class ModPoiTypesTagsProvider extends PoiTypeTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
         tag(PoiTypeTags.ACQUIRABLE_JOB_SITE)
-                .addOptional(new ResourceLocation(ArchitectVillagerMod.MODID, "sawmill_poi"));
+                .addOptional(new ResourceLocation(ArchitectVillagerMod.MODID, "drafting_table_poi"));
     }
 }

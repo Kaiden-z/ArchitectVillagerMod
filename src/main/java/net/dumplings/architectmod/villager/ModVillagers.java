@@ -17,13 +17,13 @@ public class ModVillagers {
     public static final DeferredRegister<VillagerProfession> VILLAGER_PROFESSIONS =
             DeferredRegister.create(ForgeRegistries.VILLAGER_PROFESSIONS, ArchitectVillagerMod.MODID);
 
-    public static final RegistryObject<PoiType> SAWMILL_POI = POI_TYPES.register("sawmill_poi",
-            () -> new PoiType(ImmutableSet.copyOf(ModBlocks.SAWMILL_BLOCK.get().getStateDefinition().getPossibleStates()),
+    public static final RegistryObject<PoiType> DRAFTING_TABLE_POI = POI_TYPES.register("drafting_table_poi",
+            () -> new PoiType(ImmutableSet.copyOf(ModBlocks.DRAFTING_TABLE_BLOCK.get().getStateDefinition().getPossibleStates()),
                     1, 1));
 
     public static final RegistryObject<VillagerProfession> ARCHITECT =
             VILLAGER_PROFESSIONS.register("architect", () -> new VillagerProfession("Architect",
-                    holder -> holder.get() == SAWMILL_POI.get(), holder -> holder.get() == SAWMILL_POI.get(),
+                    holder -> holder.get() == DRAFTING_TABLE_POI.get(), holder -> holder.get() == DRAFTING_TABLE_POI.get(),
                     ImmutableSet.of(), ImmutableSet.of(), SoundEvents.UI_STONECUTTER_TAKE_RESULT));
 
     public static void register(IEventBus eventBus)

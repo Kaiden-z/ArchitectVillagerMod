@@ -61,7 +61,7 @@ public class ArchitectVillagerMod
         }
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS)
         {
-            event.accept(ModBlocks.SAWMILL_BLOCK);
+            event.accept(ModBlocks.DRAFTING_TABLE_BLOCK);
         }
     }
 

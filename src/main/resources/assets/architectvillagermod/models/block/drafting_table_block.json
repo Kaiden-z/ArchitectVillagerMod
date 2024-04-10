@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "architectvillagermod:block/drafting_table_bottom",
+    "north": "architectvillagermod:block/drafting_table_side",
+    "south": "architectvillagermod:block/drafting_table_side",
+    "east": "architectvillagermod:block/drafting_table_side",
+    "west": "architectvillagermod:block/drafting_table_side",
+    "up": "architectvillagermod:block/drafting_table_top",
+    "down": "architectvillagermod:block/drafting_table_bottom"
+  }
+}

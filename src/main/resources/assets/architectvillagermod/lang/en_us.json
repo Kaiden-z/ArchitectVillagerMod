@@ -3,7 +3,7 @@
   "item.architectvillagermod.butcher_house_blueprint": "Butcher House Blueprint",
   "item.architectvillagermod.cartographer_house_blueprint": "Cartographer House Blueprint",
 
-  "block.architectvillagermod.sawmill_block": "Blueprint Table",
+  "block.architectvillagermod.drafting_table_block": "Drafting Table",
 
   "entity.minecraft.villager.architectvillagermod.architect": "Architect"
 
