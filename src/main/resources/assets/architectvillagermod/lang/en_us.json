@@ -2,6 +2,17 @@
   "item.architectvillagermod.armorer_house_blueprint": "Armorer House Blueprint",
   "item.architectvillagermod.butcher_house_blueprint": "Butcher House Blueprint",
   "item.architectvillagermod.cartographer_house_blueprint": "Cartographer House Blueprint",
+  "item.architectvillagermod.cleric_house_blueprint": "Cleric House Blueprint",
+  "item.architectvillagermod.farmer_house_blueprint": "Farmer House Blueprint",
+  "item.architectvillagermod.fisherman_house_blueprint": "Fisherman House Blueprint",
+  "item.architectvillagermod.fletcher_house_blueprint": "Fletcher House Blueprint",
+  "item.architectvillagermod.leatherworker_house_blueprint": "Leatherworker House Blueprint",
+  "item.architectvillagermod.librarian_house_blueprint": "Librarian House Blueprint",
+  "item.architectvillagermod.stone_mason_house_blueprint": "Stone Mason House Blueprint",
+  "item.architectvillagermod.sheperd_house_blueprint": "Sheperd House Blueprint",
+  "item.architectvillagermod.toolsmith_house_blueprint": "Toolsmith House Blueprint",
+  "item.architectvillagermod.weaponsmith_house_blueprint": "Weaponsmith House Blueprint",
+  "item.architectvillagermod.blueprint_paper": "Blueprint Paper",
 
   "block.architectvillagermod.drafting_table_block": "Drafting Table",
 

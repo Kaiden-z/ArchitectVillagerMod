@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SS",
+    "##",
+    "##"
+  ],
+  "key": {
+    "S": {
+      "item": "architectvillagermod:blueprint_paper"
+    },
+    "#": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "item": "architectvillagermod:drafting_table_block"
+  }
+}

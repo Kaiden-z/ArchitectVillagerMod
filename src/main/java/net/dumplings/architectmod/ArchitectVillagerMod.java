@@ -58,6 +58,17 @@ public class ArchitectVillagerMod
             event.accept(ModItems.ARMORER_HOUSE_BLUEPRINT);
             event.accept(ModItems.BUTCHER_HOUSE_BLUEPRINT);
             event.accept(ModItems.CARTOGRAPHER_HOUSE_BLUEPRINT);
+            event.accept(ModItems.CLERIC_HOUSE_BLUEPRINT);
+            event.accept(ModItems.FARMER_HOUSE_BLUEPRINT);
+            event.accept(ModItems.FISHERMAN_HOUSE_BLUEPRINT);
+            event.accept(ModItems.FLETCHER_HOUSE_BLUEPRINT);
+            event.accept(ModItems.LEATHERWORKER_HOUSE_BLUEPRINT);
+            event.accept(ModItems.LIBRARIAN_HOUSE_BLUEPRINT);
+            event.accept(ModItems.STONE_MASON_HOUSE_BLUEPRINT);
+            event.accept(ModItems.SHEPERD_HOUSE_BLUEPRINT);
+            event.accept(ModItems.TOOLSMITH_HOUSE_BLUEPRINT);
+            event.accept(ModItems.WEAPONSMITH_HOUSE_BLUEPRINT);
+            event.accept(ModItems.BLUEPRINT_PAPER);
         }
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS)
         {

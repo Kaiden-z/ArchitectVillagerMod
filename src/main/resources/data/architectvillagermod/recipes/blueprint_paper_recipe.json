@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "S#"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:blue_dye"
+    },
+    "#": {
+      "item": "minecraft:paper"
+    }
+  },
+  "result": {
+    "item": "architectvillagermod:blueprint_paper"
+  }
+}
