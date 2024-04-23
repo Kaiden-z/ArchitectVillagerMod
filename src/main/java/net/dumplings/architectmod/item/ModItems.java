@@ -62,6 +62,10 @@ public class ModItems {
             () -> new WeaponsmithHouseBlueprintItem(new Item.Properties()
                     .stacksTo(1)));
 
+    public static final RegistryObject<Item> ARCHITECT_HOUSE_BLUEPRINT = ITEMS.register("architect_house_blueprint",
+            () -> new ArchitectHouseBlueprintItem(new Item.Properties()
+                    .stacksTo(1)));
+
     public static final RegistryObject<Item> BLUEPRINT_PAPER = ITEMS.register("blueprint_paper",
             () -> new Item(new Item.Properties()));
     public static void register(IEventBus eventBus)

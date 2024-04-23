@@ -97,6 +97,12 @@ public class ModEvents {
                     new ItemStack(ModItems.WEAPONSMITH_HOUSE_BLUEPRINT.get(), 1),
                     5, 8, 0.02f
             ));
+
+            trades.get(1).add((pTrader, pRandom) -> new MerchantOffer(
+                    new ItemStack(Items.IRON_INGOT, 16),
+                    new ItemStack(ModItems.ARCHITECT_HOUSE_BLUEPRINT.get(), 1),
+                    5, 8, 0.02f
+            ));
         }
     }
 }

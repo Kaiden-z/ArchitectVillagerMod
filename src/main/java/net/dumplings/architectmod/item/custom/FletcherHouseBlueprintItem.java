@@ -9,6 +9,6 @@ public class FletcherHouseBlueprintItem extends BlueprintItemBase {
         professionType = VillagerProfession.FLETCHER;
         structureSize = new BlockPos(5, 5, 5);
         entitySpawnOffset = new BlockPos(1, 1, 1);
-        structureFileName = "testing";
+        structureFileName = "fletcherr_home";
     }
 }

@@ -68,6 +68,7 @@ public class ArchitectVillagerMod
             event.accept(ModItems.SHEPERD_HOUSE_BLUEPRINT);
             event.accept(ModItems.TOOLSMITH_HOUSE_BLUEPRINT);
             event.accept(ModItems.WEAPONSMITH_HOUSE_BLUEPRINT);
+            event.accept(ModItems.ARCHITECT_HOUSE_BLUEPRINT);
             event.accept(ModItems.BLUEPRINT_PAPER);
         }
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS)
