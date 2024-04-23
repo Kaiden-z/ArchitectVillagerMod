@@ -9,6 +9,6 @@ public class CartographerHouseBlueprintItem extends BlueprintItemBase {
         professionType = VillagerProfession.CARTOGRAPHER;
         structureSize = new BlockPos(5, 5, 5);
         entitySpawnOffset = new BlockPos(1, 1, 1);
-        structureFileName = "testing";
+        structureFileName = "carto_house";
     }
 }

@@ -9,6 +9,6 @@ public class LibrarianHouseBlueprintItem extends BlueprintItemBase {
         professionType = VillagerProfession.LIBRARIAN;
         structureSize = new BlockPos(5, 5, 5);
         entitySpawnOffset = new BlockPos(1, 1, 1);
-        structureFileName = "testing";
+        structureFileName = "library_house";
     }
 }
