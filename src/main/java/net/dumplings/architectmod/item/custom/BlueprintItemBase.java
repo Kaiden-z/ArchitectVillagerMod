@@ -12,12 +12,15 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.EmptyBlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -34,6 +37,7 @@ abstract class BlueprintItemBase extends Item {
     protected VillagerProfession professionType; // Type of villager that this blueprint should spawn
     protected BlockPos structureSize; // Size of structure in terms of a 3d Vector (length, height, width)
     protected String structureFileName; // Name of the nbt file that holes the structure
+    protected BlockPos entitySpawnOffset; // Local position of where villager should spawn relative to origin position of the structure
     private BlockPos validSiteCorner = null; // BlockPos of structure corner when site considered valid at the time of checking
     private Direction validDirection = null; // Direction of player when site was considered valid at the time of checking
     public BlueprintItemBase(Properties pProperties) {
@@ -53,6 +57,7 @@ abstract class BlueprintItemBase extends Item {
                 if (validSiteCorner == null) {
                     validSiteCorner = positionClicked;
                     validDirection = playerDirection;
+
                     player.sendSystemMessage(Component.literal("Construction site is clear!").withStyle(ChatFormatting.BLUE)
                             .append(Component.literal(" Interact with the block again to confirm.").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.WHITE)));
                     return InteractionResult.SUCCESS;
@@ -60,6 +65,13 @@ abstract class BlueprintItemBase extends Item {
                 } else if (positionClicked.equals(validSiteCorner)) {
                     player.sendSystemMessage(Component.literal("Building structure...").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GREEN));
                     structureGen(validSiteCorner, pContext, structureFileName);
+
+                    Level level = pContext.getLevel();
+                    Villager villager = new Villager(EntityType.VILLAGER, level);
+                    BlockPos entitySpawnLoc = validSiteCorner.offset(entitySpawnOffset);
+                    villager.moveTo(entitySpawnLoc.getX(), entitySpawnLoc.getY(), entitySpawnLoc.getZ());
+                    level.addFreshEntity(villager);
+
                     validSiteCorner = null;
                     validDirection = null;
                     return InteractionResult.SUCCESS;
@@ -89,7 +101,7 @@ abstract class BlueprintItemBase extends Item {
     /**
      * Check if the cube volume of where a structure is going to be built is clear of any blocks
      *
-     * @param pContext
+     * @param pContext Player context
      * @param buildLocation The bottom left corner of the where the structure is to be built
      * @param playerDirection Player's current facing cardinal direction
      * @return True if there are no blocks within the construction zone, False otherwise
@@ -98,7 +110,7 @@ abstract class BlueprintItemBase extends Item {
         buildLocation = buildLocation.offset(0, 1, 0);
 
         /*
-         * Need to check blocks towards right and away relative to player facing
+         * Need to check blocks towards right and away relative to player's facing direction
          * Facing east (positive X): X++, Z++
          * Facing south (positive Z): X--, Z++
          * Facing west (negative X): X--, Z--
