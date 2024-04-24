@@ -7,7 +7,7 @@ public class ButcherHouseBlueprintItem extends BlueprintItemBase {
     public ButcherHouseBlueprintItem(Properties pProperties) {
         super(pProperties);
         professionType = VillagerProfession.BUTCHER;
-        structureSize = new BlockPos(5, 5, 5);
+        structureSize = new BlockPos(14, 14, 15);
         entitySpawnOffset = new BlockPos(1, 1, 1);
         structureFileName = "butcher_home";
     }

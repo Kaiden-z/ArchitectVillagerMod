@@ -8,7 +8,7 @@ public class ArchitectHouseBlueprintItem extends BlueprintItemBase {
         super(pProperties);
         // idk what profession what to put here
         professionType = VillagerProfession.ARMORER;
-        structureSize = new BlockPos(5, 5, 5);
+        structureSize = new BlockPos(9, 10, 12);
         entitySpawnOffset = new BlockPos(3, 3, 4);
         structureFileName = "architect_home";
     }

@@ -7,7 +7,7 @@ public class FishermanHouseBlueprintItem extends BlueprintItemBase {
     public FishermanHouseBlueprintItem(Properties pProperties) {
         super(pProperties);
         professionType = VillagerProfession.FISHERMAN;
-        structureSize = new BlockPos(5, 5, 5);
+        structureSize = new BlockPos(13, 7, 14);
         entitySpawnOffset = new BlockPos(1, 1, 1);
         structureFileName = "fishermann_home";
     }

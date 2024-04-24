@@ -7,7 +7,7 @@ public class SheperdHouseBlueprintItem extends BlueprintItemBase {
     public SheperdHouseBlueprintItem(Properties pProperties) {
         super(pProperties);
         professionType = VillagerProfession.SHEPHERD;
-        structureSize = new BlockPos(5, 5, 5);
+        structureSize = new BlockPos(13, 11, 13);
         entitySpawnOffset = new BlockPos(1, 1, 1);
         structureFileName = "shepherd_home";
     }

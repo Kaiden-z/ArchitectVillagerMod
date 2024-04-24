@@ -7,7 +7,7 @@ public class FarmerHouseBlueprintItem extends BlueprintItemBase {
     public FarmerHouseBlueprintItem(Properties pProperties) {
         super(pProperties);
         professionType = VillagerProfession.FARMER;
-        structureSize = new BlockPos(5, 5, 5);
+        structureSize = new BlockPos(14, 8, 13);
         entitySpawnOffset = new BlockPos(1, 1, 1);
         structureFileName = "farmer_home";
     }

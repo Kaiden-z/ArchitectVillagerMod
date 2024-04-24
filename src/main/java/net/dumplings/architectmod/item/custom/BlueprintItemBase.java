@@ -25,12 +25,17 @@ import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Properties;
 
 abstract class BlueprintItemBase extends Item {
 
@@ -64,7 +69,7 @@ abstract class BlueprintItemBase extends Item {
 
                 } else if (positionClicked.equals(validSiteCorner)) {
                     player.sendSystemMessage(Component.literal("Building structure...").withStyle(ChatFormatting.BOLD).withStyle(ChatFormatting.GREEN));
-                    structureGen(validSiteCorner, pContext, structureFileName);
+                    structureGen(validSiteCorner, pContext, structureFileName, playerDirection);
 
                     Level level = pContext.getLevel();
                     Villager villager = new Villager(EntityType.VILLAGER, level);
@@ -143,7 +148,7 @@ abstract class BlueprintItemBase extends Item {
      * @param level The bottom left corner of the where the structure is to be built
      * @return a list of buildingBlocks
      */
-    public static ArrayList<buildingBlocks> getBuildingBlocks(String structureName, LevelAccessor level) {
+    public static ArrayList<buildingBlocks> getBuildingBlocks(String structureName, LevelAccessor level, Direction playerDirection) {
         ResourceManager resourceManager;
         if (!level.isClientSide())
             resourceManager = Minecraft.getInstance().getResourceManager();
@@ -155,7 +160,7 @@ abstract class BlueprintItemBase extends Item {
         CompoundTag nbt = getBuildingNbt(structureName, resourceManager);
         assert nbt != null;
         ListTag blocksNbt = nbt.getList("blocks", 10);
-        ArrayList<BlockState> palette = getBuildingPalette(nbt);
+        ArrayList<BlockState> palette = getBuildingPalette(nbt, playerDirection);
 
         for(int i = 0; i < blocksNbt.size(); i++) {
             CompoundTag blockNbt = blocksNbt.getCompound(i);
@@ -196,16 +201,72 @@ abstract class BlueprintItemBase extends Item {
      * Parse through all the available block palettes given a structure
      *
      * @param nbt CompoundTags; various info of a given structure
-     * @param resManager ResourceManager
+     * @param playerDirection player facing direction
      * @return list of various block palettes
      */
-    public static ArrayList<BlockState> getBuildingPalette(CompoundTag nbt) {
+    public static ArrayList<BlockState> getBuildingPalette(CompoundTag nbt, Direction playerDirection) {
         ArrayList<BlockState> palette = new ArrayList<>();
         // load in palette (list of unique block states)
         ListTag paletteNbt = nbt.getList("palette", 10);
-        for (int i = 0; i < paletteNbt.size(); i++)
-            palette.add(NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), paletteNbt.getCompound(i)));
+
+        for (int i = 0; i < paletteNbt.size(); i++) {
+            BlockState blkstate = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), paletteNbt.getCompound(i));
+
+            // 0: east, 1: south, 2: west, 3: north
+            //changes block facing based on player direction
+            if (blkstate.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+                int blockFacingIndex = directionToInt(blkstate.getValue(BlockStateProperties.HORIZONTAL_FACING));
+                int playerFacingIndex = directionToInt(playerDirection);
+                int newFacingIndex = (blockFacingIndex + playerFacingIndex) % 4;
+
+                Direction newDir = intTodirection(newFacingIndex);
+                blkstate = blkstate.setValue(BlockStateProperties.HORIZONTAL_FACING, newDir);
+            }
+            // block axis changed based on player direction
+            if (blkstate.hasProperty(BlockStateProperties.AXIS)) {
+                if (playerDirection == Direction.NORTH || playerDirection == Direction.SOUTH) {
+                    Direction.Axis axis = blkstate.getValue(BlockStateProperties.AXIS);
+                    if (axis == Direction.Axis.X) {
+                        blkstate = blkstate.setValue(BlockStateProperties.AXIS, Direction.Axis.Z);
+                    } else if (axis == Direction.Axis.Z) {
+                        blkstate = blkstate.setValue(BlockStateProperties.AXIS, Direction.Axis.X);
+                    }
+                }
+            }
+            palette.add(blkstate);
+        }
         return palette;
+    }
+
+    /**
+     * change a given direction to a respective int value
+     *
+     * @param dir direction class
+     */
+    private static int directionToInt(Direction dir) {
+        int index = switch (dir) {
+            case UP, DOWN, EAST -> 0;
+            case SOUTH -> 1;
+            case WEST -> 2;
+            case NORTH -> 3;
+        };
+        return index;
+    }
+
+    /**
+     * change a given int to a respective direction value
+     *
+     * @param val int
+     */
+    private static Direction intTodirection(int val) {
+        Direction dir = switch (val) {
+            case 0 -> Direction.EAST;
+            case 1 -> Direction.SOUTH;
+            case 2 -> Direction.WEST;
+            case 3 -> Direction.NORTH;
+            default -> null;
+        };
+        return dir;
     }
     
     /**
@@ -216,15 +277,47 @@ abstract class BlueprintItemBase extends Item {
      * @param structureName nbt file name of the structure
      * @return list of various block palettes
      */
-    public static void structureGen(BlockPos sitePos, UseOnContext pContext, String structureName) {
-        ArrayList<buildingBlocks> blocksList = getBuildingBlocks(structureName, pContext.getLevel());
-        for (buildingBlocks block : blocksList) {
-            BlockPos relativeToWorld = new BlockPos (
-                    sitePos.getX() + block.blockPosition().getX(),
-                    sitePos.getY() +  block.blockPosition().getY() + 1,
-                    sitePos.getZ() +  block.blockPosition().getZ()
+    public static void structureGen(BlockPos sitePos, UseOnContext pContext, String structureName, Direction playerDirection) {
+        ArrayList<buildingBlocks> blocksList = getBuildingBlocks(structureName, pContext.getLevel(), playerDirection);
+            for (buildingBlocks block : blocksList) {
+                BlockPos worldPos = relativeToWorld(sitePos, block, playerDirection);
+                pContext.getLevel().setBlockAndUpdate(worldPos, block.blockState());
+            }
+    }
+
+    /**
+     * Generate the structure
+     *
+     * @param sitePos the placed location of the block
+     * @param localPos local block position
+     * @param dir direction faced by player
+     * @return BlockPos with new positions
+     */
+    private static BlockPos relativeToWorld(BlockPos sitePos, buildingBlocks localPos, Direction dir) {
+        BlockPos relativeToWorld = switch (dir) {
+            case EAST -> new BlockPos(
+                    sitePos.getX() + localPos.blockPosition().getX(),
+                    sitePos.getY() + localPos.blockPosition().getY() + 1,
+                    sitePos.getZ() + localPos.blockPosition().getZ()
             );
-            pContext.getLevel().setBlockAndUpdate(relativeToWorld, block.blockState());
-        }
+            case SOUTH -> new BlockPos(
+                    sitePos.getX() - localPos.blockPosition().getZ(),
+                    sitePos.getY() + localPos.blockPosition().getY() + 1,
+                    sitePos.getZ() + localPos.blockPosition().getX()
+            );
+            case WEST -> new BlockPos(
+                    sitePos.getX() - localPos.blockPosition().getX(),
+                    sitePos.getY() + localPos.blockPosition().getY() + 1,
+                    sitePos.getZ() - localPos.blockPosition().getZ()
+            );
+            case NORTH -> new BlockPos(
+                    sitePos.getX() + localPos.blockPosition().getZ(),
+                    sitePos.getY() + localPos.blockPosition().getY() + 1,
+                    sitePos.getZ() - localPos.blockPosition().getX()
+            );
+            default -> null;
+        };
+        
+        return relativeToWorld;
     }
 }

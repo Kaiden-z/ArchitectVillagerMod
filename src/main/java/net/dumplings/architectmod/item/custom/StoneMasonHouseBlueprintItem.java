@@ -7,7 +7,7 @@ public class StoneMasonHouseBlueprintItem extends BlueprintItemBase {
     public StoneMasonHouseBlueprintItem(Properties pProperties) {
         super(pProperties);
         professionType = VillagerProfession.MASON;
-        structureSize = new BlockPos(5, 5, 5);
+        structureSize = new BlockPos(10, 9, 13);
         entitySpawnOffset = new BlockPos(1, 1, 1);
         structureFileName = "mason_home";
     }
