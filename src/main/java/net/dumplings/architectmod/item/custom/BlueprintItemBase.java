@@ -1,5 +1,6 @@
 package net.dumplings.architectmod.item.custom;
 
+import net.dumplings.architectmod.ClientAccess;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.*;
@@ -16,6 +17,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
@@ -30,12 +33,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 
 abstract class BlueprintItemBase extends Item {
 
@@ -47,6 +50,12 @@ abstract class BlueprintItemBase extends Item {
     private Direction validDirection = null; // Direction of player when site was considered valid at the time of checking
     public BlueprintItemBase(Properties pProperties) {
         super(pProperties);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientAccess.expandBlueprintItemToolTip(pTooltipComponents, structureSize));
     }
 
     @Override
@@ -77,9 +86,15 @@ abstract class BlueprintItemBase extends Item {
                     villager.moveTo(entitySpawnLoc.getX(), entitySpawnLoc.getY(), entitySpawnLoc.getZ());
                     level.addFreshEntity(villager);
 
+                    ItemStack itemStack = pContext.getItemInHand();
+                    if (!pContext.getPlayer().isCreative()) {
+                        itemStack.shrink(1);
+                    }
+
                     validSiteCorner = null;
                     validDirection = null;
-                    return InteractionResult.SUCCESS;
+
+                    return InteractionResult.CONSUME;
 
                 } else {
                     validSiteCorner = null;

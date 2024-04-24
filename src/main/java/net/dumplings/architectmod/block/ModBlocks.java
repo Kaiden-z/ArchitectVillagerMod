@@ -2,6 +2,7 @@ package net.dumplings.architectmod.block;
 
 import net.dumplings.architectmod.ArchitectVillagerMod;
 import net.dumplings.architectmod.item.ModItems;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.BlockItem;
@@ -20,7 +21,8 @@ public class ModBlocks {
             DeferredRegister.create(ForgeRegistries.BLOCKS, ArchitectVillagerMod.MODID);
 
     public static final RegistryObject<Block> DRAFTING_TABLE_BLOCK = registerBlock("drafting_table_block",
-            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WOOD)));
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)
+                    .strength(0.8f, 5f)));
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);
