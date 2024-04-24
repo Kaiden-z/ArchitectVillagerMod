@@ -8,7 +8,7 @@ public class ArmorerHouseBlueprintItem extends BlueprintItemBase {
         super(pProperties);
         professionType = VillagerProfession.ARMORER;
         structureSize = new BlockPos(12, 9, 13);
-        entitySpawnOffset = new BlockPos(3, 3, 4);
+        entitySpawnOffset = new BlockPos(5, 2, 8);
         structureFileName = "armorer_home";
     }
 }

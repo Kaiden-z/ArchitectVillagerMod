@@ -8,7 +8,7 @@ public class LeatherworkerHouseBlueprintItem extends BlueprintItemBase {
         super(pProperties);
         professionType = VillagerProfession.LEATHERWORKER;
         structureSize = new BlockPos(10, 12, 14);
-        entitySpawnOffset = new BlockPos(1, 1, 1);
+        entitySpawnOffset = new BlockPos(2, 2, 11);
         structureFileName = "leather_home";
     }
 }
