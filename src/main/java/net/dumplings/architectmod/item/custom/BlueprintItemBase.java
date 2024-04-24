@@ -82,7 +82,8 @@ abstract class BlueprintItemBase extends Item {
 
                     Level level = pContext.getLevel();
                     Villager villager = new Villager(EntityType.VILLAGER, level);
-                    BlockPos entitySpawnLoc = validSiteCorner.offset(entitySpawnOffset);
+                    buildingBlocks offsetHolder = new buildingBlocks(entitySpawnOffset, Blocks.AIR.defaultBlockState());
+                    BlockPos entitySpawnLoc = rotateInWorld(validSiteCorner, offsetHolder, playerDirection);
                     villager.moveTo(entitySpawnLoc.getX(), entitySpawnLoc.getY(), entitySpawnLoc.getZ());
                     level.addFreshEntity(villager);
 
@@ -259,13 +260,12 @@ abstract class BlueprintItemBase extends Item {
      * @param dir direction class
      */
     private static int directionToInt(Direction dir) {
-        int index = switch (dir) {
+        return switch (dir) {
             case UP, DOWN, EAST -> 0;
             case SOUTH -> 1;
             case WEST -> 2;
             case NORTH -> 3;
         };
-        return index;
     }
 
     /**
@@ -274,14 +274,13 @@ abstract class BlueprintItemBase extends Item {
      * @param val int
      */
     private static Direction intTodirection(int val) {
-        Direction dir = switch (val) {
+        return switch (val) {
             case 0 -> Direction.EAST;
             case 1 -> Direction.SOUTH;
             case 2 -> Direction.WEST;
             case 3 -> Direction.NORTH;
             default -> null;
         };
-        return dir;
     }
     
     /**
@@ -295,7 +294,7 @@ abstract class BlueprintItemBase extends Item {
     public static void structureGen(BlockPos sitePos, UseOnContext pContext, String structureName, Direction playerDirection) {
         ArrayList<buildingBlocks> blocksList = getBuildingBlocks(structureName, pContext.getLevel(), playerDirection);
             for (buildingBlocks block : blocksList) {
-                BlockPos worldPos = relativeToWorld(sitePos, block, playerDirection);
+                BlockPos worldPos = rotateInWorld(sitePos, block, playerDirection);
                 pContext.getLevel().setBlockAndUpdate(worldPos, block.blockState());
             }
     }
@@ -308,8 +307,9 @@ abstract class BlueprintItemBase extends Item {
      * @param dir direction faced by player
      * @return BlockPos with new positions
      */
-    private static BlockPos relativeToWorld(BlockPos sitePos, buildingBlocks localPos, Direction dir) {
-        BlockPos relativeToWorld = switch (dir) {
+    private static BlockPos rotateInWorld(BlockPos sitePos, buildingBlocks localPos, Direction dir) {
+
+        return switch (dir) {
             case EAST -> new BlockPos(
                     sitePos.getX() + localPos.blockPosition().getX(),
                     sitePos.getY() + localPos.blockPosition().getY() + 1,
@@ -332,7 +332,5 @@ abstract class BlueprintItemBase extends Item {
             );
             default -> null;
         };
-        
-        return relativeToWorld;
     }
 }

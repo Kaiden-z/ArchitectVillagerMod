@@ -9,7 +9,7 @@ public class ArchitectHouseBlueprintItem extends BlueprintItemBase {
         // idk what profession what to put here
         professionType = VillagerProfession.ARMORER;
         structureSize = new BlockPos(9, 10, 12);
-        entitySpawnOffset = new BlockPos(3, 3, 4);
+        entitySpawnOffset = new BlockPos(5, 2, 8);
         structureFileName = "architect_home";
     }
 }

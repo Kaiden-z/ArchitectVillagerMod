@@ -8,7 +8,7 @@ public class ClericHouseBlueprintItem extends BlueprintItemBase {
         super(pProperties);
         professionType = VillagerProfession.CLERIC;
         structureSize = new BlockPos(10, 19, 11);
-        entitySpawnOffset = new BlockPos(1, 1, 1);
+        entitySpawnOffset = new BlockPos(6, 11, 7);
         structureFileName = "cleric_home";
     }
 }
